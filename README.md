@@ -11,4 +11,10 @@ B-YEP-500-STG-5-1-area-theo.rohmer
 2. Run `docker-compose up --build` at the root of this repository.
 
 ### [API documentation (click here)](https://documenter.getpostman.com/view/14250431/TWDUqyBb)
-*Does not work anymore, sorry*
+*Docs do not work anymore, sorry*
+
+## Authors
+- Matthieu Rochette (API + docker)
+- Elia Belkacem (API + front)
+- Théo Rohmer (front)
+- Gaël Dorckel (mobile)
