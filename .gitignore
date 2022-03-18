@@ -1,0 +1,3 @@
+**/.vscode
+.docker/mongodb/data/log/.*
+.docker/mongodb/data/log/*log

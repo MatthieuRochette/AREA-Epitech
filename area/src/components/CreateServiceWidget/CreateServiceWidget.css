@@ -1,0 +1,29 @@
+.p-card-header
+{
+    text-align: center
+}
+
+.p-card-content
+{
+    text-align: center
+}
+
+.p-card-footer 
+{
+    text-align: right
+}
+
+.CardWrapper {
+    padding: 20px;
+    display: inline-block;
+}
+
+.login-block{
+    background-color: #EAEAEA;
+    position: relative;
+    left: 53%;
+    width: 45%;
+    height: 80%;
+    top: 50px;
+    border-radius: 15px;
+}

@@ -1,0 +1,32 @@
+name: checks
+on: push
+jobs:
+  mobile-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Mobile
+        working-directory: ./mobile
+        run: yarn install
+      - name: Test Mobile
+        working-directory: ./mobile
+        run: yarn test
+
+  server-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Server
+        working-directory: ./area_api
+        run: pip3 install -r requirements.txt
+
+  build-area:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build AREA
+        run: docker-compose build --no-cache
+      - name: Start AREA
+        run: docker-compose up -d
+      - name: Check AREA
+        run: docker ps -a

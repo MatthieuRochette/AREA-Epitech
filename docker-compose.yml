@@ -1,0 +1,94 @@
+version: "3.2"
+
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    volumes:
+      - ./.docker/mongodb/mongod.conf:/etc/mongod.conf
+      - ./.docker/mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+      - area-db:/data/db/
+      - ./.docker/mongodb/data/log/:/var/log/mongodb/
+    networks:
+     - "db-network"
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: azerty
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    restart: always
+    command: ["-f", "/etc/mongod.conf"]
+
+  server:
+    build:
+      context: ./area_api
+      dockerfile: Dockerfile
+    image: area-api:latest
+    env_file:
+      - ./area_api/prod.env
+      - ./area_api/secrets.env
+    expose:
+      - 80
+    networks:
+      - "front"
+      - "back"
+      - "db-network"
+    restart: always
+    depends_on:
+      - mongodb
+    container_name: "area-server"
+
+  nginx:
+    build: ./nginx
+    networks:
+      - back
+    ports:
+      - ${API_PORT}:8080
+    restart: always
+    container_name: nginx
+
+  client-mobile:
+    build:
+      context: ./mobile
+      dockerfile: Dockerfile
+    networks:
+      - front
+    volumes:
+      - client-volume:/mobile
+    container_name: mobile
+
+  client-web:
+    build:
+      context: ./area
+      dockerfile: Dockerfile
+    networks:
+      - front
+    volumes:
+      - type: volume
+        source: client-volume
+        target: /mobile
+        read_only: true
+    restart: always
+    ports:
+      - ${CLIENT_PORT}:8081
+    depends_on:
+      - client-mobile
+    container_name: client-web
+
+
+volumes:
+  client-volume:
+    driver: local
+  area-db:
+    driver: local
+
+
+networks:
+  front:
+  back:
+  db-network:
